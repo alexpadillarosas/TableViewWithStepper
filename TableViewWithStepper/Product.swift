@@ -14,10 +14,11 @@ class Product{
     let name : String
     let pricePerUnit: Double?          // For unit-based sales
     let pricePerKilogram: Double?      // For weight-based sales
-    var saleType: SaleType
+    var saleType: SaleType             //By Unit / Weight
     var emoji : String
     let locale: Locale                 // 👈 Auto-detected or injected
-
+    
+    //Initialiser used for products with unit price
     init(name: String, pricePerUnit: Double, count: Int, emoji: String, locale: Locale = .current) {
         self.name = name
         self.pricePerUnit = pricePerUnit
@@ -27,6 +28,7 @@ class Product{
         self.locale = locale
     }
         
+    //Initialiser used for products with price per kilo
     init(name: String, pricePerKilogram: Double, weight: Measurement<UnitMass>, emoji: String, locale: Locale = .current) {
         self.name = name
         self.pricePerUnit = nil
@@ -44,8 +46,12 @@ class Product{
             return (pricePerKilogram ?? 0.0) * weight.converted(to: .kilograms).value
         }
     }
-
-    func shortDescription() -> String {
+    /**
+     return a string with a short description including the price:
+     Cavendish Banana @ $4.99/kg
+     Watermelon @ $2.56/kg
+     */
+     func shortDescription() -> String {
         switch saleType {
         case .byUnit(let count):
             return "\(name) @ \(format(pricePerUnit ?? 0))/unit"
@@ -54,6 +60,9 @@ class Product{
         }
     }
     
+    /**
+     return a string with only the price description per unit
+     */
     func priceDescription() -> String {
         switch saleType {
         case .byUnit:
@@ -75,13 +84,18 @@ class Product{
         }
     }
 
+    /**
+     Functions used to return the currency using the device locale
+     */
     private func format(_ value: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = locale // 👈 Automatically uses device locale
         return formatter.string(from: NSNumber(value: value)) ?? "\(value)"
     }
-    
+    /**
+     Return the unit used by the product : Kg or Unit
+     */
     func measurementUnitLabel() -> String? {
         switch saleType {
         case .byWeight(let weight):
