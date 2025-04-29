@@ -68,21 +68,23 @@ class StepperTableViewController: UITableViewController {
             cell.productQuantityLabel.text = "0.0"
         }
         
+        //call the function (stepperButtonDidPress) every time the value in the stepper changes
         cell.productQtyStepper.addTarget(self, action: #selector(stepperButtonDidPress(sender:)), for: UIControl.Event.valueChanged)
         
         
         return cell
     }
     
+    //Definition of the function
     @objc func stepperButtonDidPress(sender: UIStepper){
         let quantity = sender.value
         let row = sender.tag
         if let cell = tableView.cellForRow(at: IndexPath(row: row, section: 0)) as? StepperTableViewCell {
             
-            switch cell.productUnitLabel.text {
-            case "unit":
+            switch cell.productUnitLabel.text?.uppercased() {
+            case "UNIT":
                 cell.productQuantityLabel.text = "\(Int(quantity))"
-            case "Kg":
+            case "KG":
                 cell.productQuantityLabel.text = "\(quantity)"
             default:
                 cell.productQuantityLabel.text = "\(quantity)"

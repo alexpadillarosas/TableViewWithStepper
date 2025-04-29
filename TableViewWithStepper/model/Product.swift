@@ -53,9 +53,9 @@ class Product{
      */
      func shortDescription() -> String {
         switch saleType {
-        case .byUnit(let count):
+        case .byUnit:
             return "\(name) @ \(format(pricePerUnit ?? 0))/unit"
-        case .byWeight(let weight):
+        case .byWeight:
             return "\(name) @ \(format(pricePerKilogram ?? 0))/kg"
         }
     }
@@ -100,7 +100,7 @@ class Product{
         switch saleType {
         case .byWeight(let weight):
             return weight.unit.symbol
-        case .byUnit(let count):
+        case .byUnit:
             return "unit"
         }
     }
